@@ -1,7 +1,8 @@
 # Lambda + R script + Node.js stack for Docker
 
 This stack adds Rscript and some spatial libraries to a docker image for AWS Lambda. The default language
-for the image is Node.js, but the handler entry point immediately passed arguments to an R script.  
+for the image is Node.js, but the entry point function immediately passes arguments to an R script and returns
+any console output.  
 
 ## Files  
 
