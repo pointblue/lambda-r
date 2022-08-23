@@ -91,8 +91,8 @@ RUN amazon-linux-extras enable R4 \
     && yum clean metadata \
     && yum install -y R
 
-# Main app code to handle lambda events
-COPY app.js ${LAMBDA_TASK_ROOT}
+#install git
+RUN yum install -y git
 
 # rgeos, rgdal, and raster dependencies
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm  \
@@ -101,6 +101,12 @@ RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
 
 # R dependecies
 RUN Rscript -e "install.packages(c('logger','logging','httr','jsonlite', 'yaml', 'rgeos', 'rgdal', 'raster'), repos = 'https://cloud.r-project.org/')"
+
+# setup requirements to clone from github
+RUN mkdir /root/.ssh && touch /root/.ssh/known_hosts && chmod 600 /root/.ssh/known_hosts && ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+
+# Main app code to handle lambda events
+COPY app.js ${LAMBDA_TASK_ROOT}
 
 # main R script file
 COPY main.R ${LAMBDA_TASK_ROOT}

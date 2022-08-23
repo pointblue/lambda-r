@@ -21,11 +21,14 @@ NOTE: `docker` commands must be run as root user or by using `sudo` command, dep
   This command says: Create a container with the name "my-lambda-r" from the "lambda-r" image, 
   run it, and expose port 8080 of the container to 9000 on my machine.
   - **Test the lambda api**:  
-  `curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"payload":"hello world!"}'`  
+  ```
+  curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"Records":[{"eventVersion":"2.1","eventSource":"aws:s3","awsRegion":"us-west-2","eventTime":"1970-01-01T00:00:00.000Z","eventName":"ObjectCreated:Put","userIdentity":{"principalId":"AIDAJDPLRKLG7UEXAMPLE"},"requestParameters":{"sourceIPAddress":"127.0.0.1"},"responseElements":{"x-amz-request-id":"C3D13FE58DE4C810","x-amz-id-2":"FMyUVURIY8/IgAtTv8xRjskZQpcIZ9KG4V5Wp6S7S/JRWeUWerMUE5JgHvANOjpD"},"s3":{"s3SchemaVersion":"1.0","configurationId":"testConfigRule","bucket":{"name":"mybucket","ownerIdentity":{"principalId":"A3NL1KOZZKExample"},"arn":"arn:aws:s3:::mybucket"},"object":{"key":"FirstProcess/triggerYamls/testYaml.yaml","size":1024,"eTag":"d41d8cd98f00b204e9800998ecf8427e","versionId":"096fKKXTRTtl3on89fVO.nfljtsv6qko","sequencer":"0055AED6DCD90281E5"}}}]}'
+  ```  
   This command emulates how the docker container would respond to requests from AWS lambda.  
   **Expected output**:  
   ```
-  "[1] \"The following arguments were passed from lambda to nodejs, then to Rscript:\"\n[1] {\"payload\":\"hello world!\"}\n"
+You will receive an error because your local environment will not contain the image file necessary for processing. This
+is the current development target, but it should be updated to something stable.
   ```
 
 ### Command Line Access  
