@@ -4,11 +4,20 @@ This stack adds Rscript and some spatial libraries to a docker image for AWS Lam
 for the image is Node.js, but the entry point function immediately passes arguments to an R script and returns
 any console output.  
 
+## Installation
+
+Installation in only require if you're running the container outside of lambda in the AWS cloud.
+
+### Local Installation
+
+Copy the `.env-example` file and rename it `.env`, in the same path.
+
 ## Files  
 
   - **Dockerfile** - recipe for docker image
   - **apps.js** - App handler code for lambda events
   - **main.R** - Main R script that is called by app.js and passed any information from the lambda event
+  - **.env-example** - An example configuration file
 
 ## Examples  
 

@@ -7,6 +7,13 @@ library('yaml')
 library('rgeos')
 library('rgdal')
 library('raster')
+library('airtabler')
+library('aws.s3')
+library('remotes')
+library('data.table')
+library('dotenv')
+
+# get the argument passed to this script
 args <- commandArgs(trailingOnly = TRUE)
 
 ##
@@ -17,14 +24,15 @@ printArgs <- function(){
    noquote(args)
 }
 
-##
-# This is the 'kick off' function
-##
-importRasters_toOSW<-function(inpJSON){
-	source("/tmp/OffShoreWind_public/scripts/batchProcessRasters.R")
-	ret<-batchImportRasters_toOSW(inpJSON)
-	return(ret)
-}
+# get the path to the cloned repo from the environment
+clonePath<-Sys.getenv("TARGET_REPO_CLONE_PATH")
+# get the R source file in the repo that will be executed
+sourceFile<-Sys.getenv("R_SOURCE_FILE")
+# load the file using the full path
+source(paste(clonePath, "/", sourceFile, sep=""))
 
-# will this print the output of this function?
-importRasters_toOSW(args)
+# execute the main handler function
+mainOutput<-main(args)
+
+# this the main output
+print( mainOutput )

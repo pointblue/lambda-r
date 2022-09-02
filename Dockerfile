@@ -102,11 +102,32 @@ RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
 # R dependecies
 RUN Rscript -e "install.packages(c('logger','logging','httr','jsonlite', 'yaml', 'rgeos', 'rgdal', 'raster'), repos = 'https://cloud.r-project.org/')"
 
+# 'devtools', 'aws.s3', 'remotes', 'data.table'
+RUN Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org/')"
+RUN Rscript -e "install.packages('data.table', repos = 'https://cloud.r-project.org/')"
+
+# devtools dependencies
+RUN yum install -y libxml2-devel harfbuzz-devel fribidi-devel freetype-devel libpng-devel libtiff-devel libjpeg-turbo-devel
+RUN Rscript -e "install.packages('devtools', repos = 'https://cloud.r-project.org/')"
+
+# Install airtabler dependency for R using github, as it is not available using the default package repository
+RUN Rscript -e "library('devtools'); devtools::install_github('bergant/airtabler')"
+
+RUN Rscript -e "install.packages('aws.s3', repos = 'https://cloud.r-project.org')"
+
+RUN npm install -g dotenv
+
+# allow the app.js script to access globally installed npm libraries
+ENV NODE_PATH /var/lang/lib/node_modules
+
+RUN Rscript -e "install.packages('dotenv', repos = 'https://cloud.r-project.org')"
+
 # setup requirements to clone from github
 RUN mkdir /root/.ssh && touch /root/.ssh/known_hosts && chmod 600 /root/.ssh/known_hosts && ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 
 # Main app code to handle lambda events
-COPY app.js ${LAMBDA_TASK_ROOT}
+# include .env second, in case it doesn't exist
+COPY app.js .env ${LAMBDA_TASK_ROOT}/
 
 # main R script file
 COPY main.R ${LAMBDA_TASK_ROOT}
