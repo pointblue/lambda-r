@@ -125,6 +125,14 @@ RUN Rscript -e "install.packages('dotenv', repos = 'https://cloud.r-project.org'
 # setup requirements to clone from github
 RUN mkdir /root/.ssh && touch /root/.ssh/known_hosts && chmod 600 /root/.ssh/known_hosts && ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 
+# path for proj4 shared resources
+ENV PROJ_LIB /usr/local/share/proj
+
+# manually copy proj4 resource file package
+RUN mkdir -p /usr/local/share/proj && \
+    cp /var/task/proj-${PROJ_VERSION}/nad/proj_def.dat ${PROJ_LIB} && \
+    cp /var/task/proj-${PROJ_VERSION}/nad/proj_def.dat /usr/share
+
 # Main app code to handle lambda events
 # include .env second, in case it doesn't exist
 COPY app.js .env ${LAMBDA_TASK_ROOT}/
